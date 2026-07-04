@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { supabaseConfigurado } from '../lib/supabase.js'
 import {
   listarInformes, crearInforme, guardarPdfInforme, urlPublicaInforme, borrarInforme,
-  listarPersonas, listarEncargos,
+  listarPersonas, listarEncargos, listarNotasTodas,
 } from '../lib/datos.js'
 import { FASES, faseInfo } from '../lib/fases.js'
 import { generarPdfInforme } from '../lib/informePdf.js'
@@ -29,14 +29,16 @@ const CAMPOS = [
   { k: 'fecha', t: 'Fecha' },
   { k: 'importe', t: 'Importe' },
   { k: 'descripcion', t: 'Descripción' },
+  { k: 'notas', t: 'Notas' },
 ]
-const incPorDefecto = () => ({ centro: true, producto: true, fecha: true, importe: false, descripcion: true })
+const incPorDefecto = () => ({ centro: true, producto: true, fecha: true, importe: false, descripcion: true, notas: false })
 
 export default function Informes() {
   const [vista, setVista] = useState('lista')
   const [informes, setInformes] = useState([])
   const [proveedores, setProveedores] = useState([])
   const [encargos, setEncargos] = useState([])
+  const [notas, setNotas] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
 
@@ -51,10 +53,10 @@ export default function Informes() {
   async function recargar() {
     setError(null)
     try {
-      const [inf, prov, enc] = await Promise.all([
-        listarInformes(), listarPersonas('proveedor'), listarEncargos(),
+      const [inf, prov, enc, nts] = await Promise.all([
+        listarInformes(), listarPersonas('proveedor'), listarEncargos(), listarNotasTodas(),
       ])
-      setInformes(inf); setProveedores(prov); setEncargos(enc)
+      setInformes(inf); setProveedores(prov); setEncargos(enc); setNotas(nts)
     } catch (e) { setError(e.message) }
   }
   useEffect(() => {
@@ -73,6 +75,12 @@ export default function Informes() {
   const setInc = (id, k, v) => setSel((s) => ({ ...s, [id]: { ...s[id], incluir: { ...s[id].incluir, [k]: v } } }))
   const setCom = (id, v) => setSel((s) => ({ ...s, [id]: { ...s[id], comentario: v } }))
   const nSel = Object.keys(sel).length
+
+  const notasPorEnc = useMemo(() => {
+    const m = {}
+    for (const n of notas) { (m[n.encargo_id] ||= []).push(n) }
+    return m
+  }, [notas])
 
   const gruposEnc = useMemo(() => FASES
     .map((f) => ({
@@ -104,6 +112,9 @@ export default function Informes() {
           descripcion: e.descripcion || '', importe: e.ingresos_totales,
           comentario: (sel[e.id].comentario || '').trim(),
           incluir: sel[e.id].incluir,
+          notas: sel[e.id].incluir.notas
+            ? (notasPorEnc[e.id] || []).map((n) => ({ texto: n.texto, creado_en: n.creado_en }))
+            : [],
         }))
       const contenido = {
         nombre: form.nombre.trim(), fecha: form.fecha,
@@ -248,13 +259,18 @@ export default function Informes() {
                     {marcada && (
                       <div style={{ marginTop: '0.6rem', paddingLeft: '1.7rem' }}>
                         <div style={{ display: 'flex', gap: '0.4rem 0.9rem', flexWrap: 'wrap' }}>
-                          {CAMPOS.map((c) => (
-                            <label key={c.k} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.85rem' }}>
-                              <input type="checkbox" checked={!!sel[e.id].incluir[c.k]} style={{ width: 16, height: 16 }}
-                                onChange={(ev) => setInc(e.id, c.k, ev.target.checked)} />
-                              {c.t}
-                            </label>
-                          ))}
+                          {CAMPOS.map((c) => {
+                            const nNotas = (notasPorEnc[e.id] || []).length
+                            const sinNotas = c.k === 'notas' && nNotas === 0
+                            return (
+                              <label key={c.k} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem',
+                                fontSize: '0.85rem', opacity: sinNotas ? 0.4 : 1 }}>
+                                <input type="checkbox" checked={!!sel[e.id].incluir[c.k]} disabled={sinNotas} style={{ width: 16, height: 16 }}
+                                  onChange={(ev) => setInc(e.id, c.k, ev.target.checked)} />
+                                {c.k === 'notas' ? `Notas (${nNotas})` : c.t}
+                              </label>
+                            )
+                          })}
                         </div>
                         <input className="campo" placeholder="Comentario para el informe (opcional)"
                           value={sel[e.id].comentario} style={{ marginTop: '0.45rem' }}

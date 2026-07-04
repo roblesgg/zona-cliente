@@ -104,6 +104,13 @@ export async function generarPdfInforme(contenido) {
       if (metaPartes.length) parrafo(metaPartes.join('   ·   '), { size: 9, color: [120, 120, 120], gap: 1 })
 
       if (inc.descripcion && o.descripcion) parrafo(o.descripcion, { size: 10, color: [55, 55, 55], gap: 1 })
+      if (inc.notas && o.notas?.length) {
+        parrafo('Notas:', { size: 9, style: 'bold', color: [110, 110, 110], gap: 0.5, indent: 2 })
+        for (const n of o.notas) {
+          const f = fechaEs(n.creado_en)
+          parrafo(`•  ${f ? f + ' — ' : ''}${n.texto}`, { size: 9.5, color: [70, 70, 70], gap: 0.8, indent: 4 })
+        }
+      }
       if (o.comentario) parrafo(`» ${o.comentario}`, { size: 10, style: 'italic', color: [70, 70, 90], gap: 1 })
       y += 2.5
     }

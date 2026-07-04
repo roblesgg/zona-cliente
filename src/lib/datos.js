@@ -252,6 +252,17 @@ export async function listarNotasDeEncargo(encargoId) {
   return data
 }
 
+// Todas las notas del usuario (para agrupar por oportunidad en los informes).
+export async function listarNotasTodas() {
+  const { data, error } = await supabase
+    .from('notas')
+    .select('id, encargo_id, texto, creado_en')
+    .is('borrado_en', null)
+    .order('creado_en', { ascending: true })
+  if (error) throw error
+  return data
+}
+
 export async function crearNota(nota) {
   const { data, error } = await supabase.from('notas').insert(nota).select().single()
   if (error) throw error
