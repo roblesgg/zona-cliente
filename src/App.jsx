@@ -13,6 +13,7 @@ import Avisos from './pages/Avisos.jsx'
 import Papelera from './pages/Papelera.jsx'
 import Ajustes from './pages/Ajustes.jsx'
 import Productos from './pages/Productos.jsx'
+import Informes from './pages/Informes.jsx'
 
 export default function App() {
   const [session, setSession] = useState(null)
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="papelera" element={<Papelera />} />
         <Route path="ajustes" element={<Ajustes />} />
         <Route path="productos" element={<Productos />} />
+        <Route path="informes" element={<Informes />} />
 
         {/* Rutas antiguas -> nuevas, por si hay enlaces o marcadores guardados */}
         <Route path="encargos" element={<Navigate to="/ventas" replace />} />

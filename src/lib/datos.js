@@ -431,6 +431,7 @@ const TABLAS_PAPELERA = [
   { tabla: 'encargos', etiqueta: 'Oportunidad', campo: 'producto' },
   { tabla: 'notas', etiqueta: 'Nota', campo: 'texto' },
   { tabla: 'tareas', etiqueta: 'Tarea', campo: 'texto' },
+  { tabla: 'informes', etiqueta: 'Informe', campo: 'nombre' },
 ]
 
 export async function listarPapelera() {
@@ -455,6 +456,54 @@ export async function restaurarPapelera(tabla, id) {
 
 export async function borrarDefinitivo(tabla, id) {
   const { error } = await supabase.from(tabla).delete().eq('id', id)
+  if (error) throw error
+}
+
+// ---------------------------------------------------------------
+// INFORMES (PDF para proveedores) — bucket público 'informes'
+// ---------------------------------------------------------------
+
+// Lista los informes con su proveedor, más nuevos primero.
+export async function listarInformes() {
+  const { data, error } = await supabase
+    .from('informes')
+    .select('*, proveedor:personas!proveedor_id(nombre, telefonos, correo)')
+    .is('borrado_en', null)
+    .order('fecha', { ascending: false })
+    .order('creado_en', { ascending: false })
+  if (error) throw error
+  return data
+}
+
+export async function crearInforme(informe) {
+  const { data, error } = await supabase.from('informes').insert(informe).select().single()
+  if (error) throw error
+  return data
+}
+
+// Sube (o reemplaza) el PDF del informe al bucket público y guarda su ruta.
+export async function guardarPdfInforme(informeId, blob) {
+  const { data: u } = await supabase.auth.getUser()
+  const uid = u?.user?.id
+  if (!uid) throw new Error('Sin sesión')
+  const ruta = `${uid}/${informeId}.pdf`
+  const { error: errUp } = await supabase.storage
+    .from('informes').upload(ruta, blob, { contentType: 'application/pdf', upsert: true })
+  if (errUp) throw errUp
+  const { data, error } = await supabase
+    .from('informes').update({ pdf_ruta: ruta }).eq('id', informeId).select().single()
+  if (error) throw error
+  return data
+}
+
+// URL pública (bucket público): sirve para compartir por WhatsApp/correo.
+export function urlPublicaInforme(ruta) {
+  if (!ruta) return null
+  return supabase.storage.from('informes').getPublicUrl(ruta).data.publicUrl
+}
+
+export async function borrarInforme(id) {
+  const { error } = await supabase.from('informes').update({ borrado_en: new Date().toISOString() }).eq('id', id)
   if (error) throw error
 }
 

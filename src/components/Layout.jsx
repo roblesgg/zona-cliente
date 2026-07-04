@@ -9,6 +9,7 @@ const enlaces = [
   { to: '/ventas', icono: '📊', texto: 'Oportunidades' },
   { to: '/cartera', icono: '👥', texto: 'Cartera' },
   { to: '/productos', icono: '📦', texto: 'Productos' },
+  { to: '/informes', icono: '📄', texto: 'Informes' },
   { to: '/agenda', icono: '📅', texto: 'Agenda' },
 ]
 
