@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { supabaseConfigurado } from '../lib/supabase.js'
 import {
   listarInformes, crearInforme, guardarPdfInforme, urlPublicaInforme, borrarInforme,
-  listarPersonas, listarEncargos, listarNotasTodas,
+  listarPersonas, listarEncargos, listarNotasTodas, obtenerAjustes,
 } from '../lib/datos.js'
 import { FASES, faseInfo } from '../lib/fases.js'
 import { generarPdfInforme } from '../lib/informePdf.js'
@@ -39,6 +39,7 @@ export default function Informes() {
   const [proveedores, setProveedores] = useState([])
   const [encargos, setEncargos] = useState([])
   const [notas, setNotas] = useState([])
+  const [autor, setAutor] = useState('')
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState(null)
 
@@ -53,10 +54,10 @@ export default function Informes() {
   async function recargar() {
     setError(null)
     try {
-      const [inf, prov, enc, nts] = await Promise.all([
-        listarInformes(), listarPersonas('proveedor'), listarEncargos(), listarNotasTodas(),
+      const [inf, prov, enc, nts, aj] = await Promise.all([
+        listarInformes(), listarPersonas('proveedor'), listarEncargos(), listarNotasTodas(), obtenerAjustes(),
       ])
-      setInformes(inf); setProveedores(prov); setEncargos(enc); setNotas(nts)
+      setInformes(inf); setProveedores(prov); setEncargos(enc); setNotas(nts); setAutor(aj?.nombre || '')
     } catch (e) { setError(e.message) }
   }
   useEffect(() => {
@@ -117,7 +118,7 @@ export default function Informes() {
             : [],
         }))
       const contenido = {
-        nombre: form.nombre.trim(), fecha: form.fecha,
+        nombre: form.nombre.trim(), fecha: form.fecha, autor: autor || '',
         proveedor: { id: prov?.id, nombre: prov?.nombre || '' },
         oportunidades,
       }

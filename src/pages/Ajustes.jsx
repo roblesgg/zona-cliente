@@ -52,8 +52,11 @@ export default function Ajustes() {
 
       <form className="tarjeta" onSubmit={guardar} style={{ maxWidth: 520 }}>
         <h3>Nombre</h3>
-        <input className="campo" placeholder="Tu nombre (opcional)" value={form.nombre}
+        <input className="campo" placeholder="Tu nombre (ej. Antonio Robles)" value={form.nombre}
           onChange={(e) => setForm({ ...form, nombre: e.target.value })} style={{ maxWidth: 320 }} />
+        <p className="placeholder" style={{ marginTop: '0.3rem', marginBottom: 0, fontSize: '0.85rem' }}>
+          Aparece en los informes: “Para: {'{proveedor}'} <b>de {form.nombre || 'tu nombre'}</b>”.
+        </p>
 
         <h3 style={{ marginTop: '1.25rem' }}>Avisos de recordatorios y tareas</h3>
         <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>

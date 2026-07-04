@@ -9,6 +9,12 @@
 
 import { FASES } from './fases.js'
 
+// Etiqueta en plural para el encabezado de cada grupo de oportunidades.
+const PLURAL = {
+  oportunidad: 'Oportunidades', oferta: 'Ofertas', ganado: 'Ganados',
+  perdido: 'Perdidos', incidencia: 'Incidencias',
+}
+
 const MARGEN = 16
 const A4 = { w: 210, h: 297 }
 
@@ -51,14 +57,16 @@ export async function generarPdfInforme(contenido) {
   }
 
   // ---- Cabecera ----
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(9); doc.setTextColor(150, 150, 150)
-  doc.text('ZONA CLIENTE', MARGEN, y); y += 7
-  doc.setFontSize(20); doc.setTextColor(20, 20, 20)
+  y += 4
+  doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.setTextColor(20, 20, 20)
   const titulo = doc.splitTextToSize(contenido.nombre || 'Informe', anchoUtil)
   for (const ln of titulo) { doc.text(ln, MARGEN, y); y += 8 }
   doc.setFont('helvetica', 'normal'); doc.setFontSize(11); doc.setTextColor(90, 90, 90)
-  const meta = [contenido.proveedor?.nombre ? `Para: ${contenido.proveedor.nombre}` : null,
-    contenido.fecha ? `Fecha: ${fechaEs(contenido.fecha)}` : null].filter(Boolean).join('    ·    ')
+  // "Para: {proveedor} de {autor}" (el autor lo pone el usuario en Ajustes).
+  let para = contenido.proveedor?.nombre ? `Para: ${contenido.proveedor.nombre}` : ''
+  if (contenido.autor) para += `${para ? ' ' : ''}de ${contenido.autor}`
+  const meta = [para || null, contenido.fecha ? `Fecha: ${fechaEs(contenido.fecha)}` : null]
+    .filter(Boolean).join('    ·    ')
   if (meta) { doc.text(meta, MARGEN, y); y += 6 }
   doc.setDrawColor(220, 220, 220); doc.line(MARGEN, y, A4.w - MARGEN, y); y += 8
 
@@ -87,7 +95,7 @@ export async function generarPdfInforme(contenido) {
     doc.setFillColor(r, gr, b)
     doc.roundedRect(MARGEN, y - 3.6, 3, 4.4, 1, 1, 'F')
     doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(r, gr, b)
-    doc.text(`${g.fase.t}  (${g.items.length})`, MARGEN + 5, y); y += 6
+    doc.text(PLURAL[g.fase.v] || g.fase.t, MARGEN + 5, y); y += 6
 
     for (const o of g.items) {
       const inc = o.incluir || {}
@@ -123,7 +131,6 @@ export async function generarPdfInforme(contenido) {
     doc.setPage(p)
     doc.setFont('helvetica', 'normal'); doc.setFontSize(8); doc.setTextColor(160, 160, 160)
     doc.text(`Página ${p} de ${total}`, A4.w - MARGEN, A4.h - 8, { align: 'right' })
-    doc.text('Generado con Zona Cliente', MARGEN, A4.h - 8)
   }
 
   return doc.output('blob')
