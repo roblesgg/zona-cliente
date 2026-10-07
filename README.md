@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="https://zonacliente.vercel.app"><img src="https://img.shields.io/badge/web-abrir-103D7E?style=for-the-badge" alt="Abrir la web"></a>
+  <a href="https://zonacliente.dripdev.dev"><img src="https://img.shields.io/badge/web-zonacliente.dripdev.dev-103D7E?style=for-the-badge" alt="Abrir la web"></a>
   <a href="https://github.com/roblesgg/zona-cliente/releases/latest"><img src="https://img.shields.io/github/v/release/roblesgg/zona-cliente?style=for-the-badge&label=android&color=33B090" alt="Descargar para Android"></a>
   <img src="https://img.shields.io/badge/datos-protegidos-62428B?style=for-the-badge" alt="Datos protegidos">
 </p>
@@ -27,7 +27,7 @@ Hecha a medida para una persona real: letra grande, botones grandes y nada que d
 
 ## Úsala
 
-- **En el navegador:** [zonacliente.vercel.app](https://zonacliente.vercel.app)
+- **En el navegador:** [zonacliente.dripdev.dev](https://zonacliente.dripdev.dev)
 - **En Android:** baja `zona-cliente-latest.apk` de la [última versión](https://github.com/roblesgg/zona-cliente/releases/latest).
 
 Cada persona entra con su cuenta y solo ve sus propios datos.
