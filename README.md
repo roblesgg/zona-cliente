@@ -1,65 +1,58 @@
+<a href="https://dripdev.dev"><img src="docs/readme/dripdev.png" alt="Un producto de DripDev" width="100%"></a>
+
 <p align="center">
-  <img src="docs/banner.png" alt="Zona Cliente: hospitales, contactos y encargos en un solo sitio" width="100%">
+  <img src="docs/readme/portada.png" alt="Zona Cliente: hospitales, contactos y encargos en un solo sitio" width="100%">
 </p>
 
 <p align="center">
-  <a href="https://github.com/roblesgg/zona-cliente/releases/latest"><img src="https://img.shields.io/github/v/release/roblesgg/zona-cliente?label=versi%C3%B3n&color=8F72EB" alt="Versión"></a>
-  <a href="https://zonacliente.vercel.app"><img src="https://img.shields.io/badge/web-zonacliente.vercel.app-FB944E" alt="Web"></a>
-  <img src="https://img.shields.io/badge/Android-APK-121016?logo=android" alt="Android">
-  <img src="https://img.shields.io/badge/React-Supabase-121016?logo=react" alt="React y Supabase">
+  <a href="https://zonacliente.vercel.app"><img src="https://img.shields.io/badge/web-abrir-103D7E?style=for-the-badge" alt="Abrir la web"></a>
+  <a href="https://github.com/roblesgg/zona-cliente/releases/latest"><img src="https://img.shields.io/github/v/release/roblesgg/zona-cliente?style=for-the-badge&label=android&color=33B090" alt="Descargar para Android"></a>
+  <img src="https://img.shields.io/badge/datos-protegidos-62428B?style=for-the-badge" alt="Datos protegidos">
 </p>
 
-**Zona Cliente** es un CRM hecho a medida para un comercial de instrumental quirúrgico que visita hospitales. Reúne en un solo sitio cada hospital con sus servicios y contactos, las empresas proveedoras y cada encargo desde que es una oportunidad hasta que se cobra. Funciona igual en el ordenador y en el móvil.
+**Zona Cliente** es la cartera de un comercial que visita hospitales, en el bolsillo. Cada hospital con sus servicios y sus contactos, cada encargo con su fase y todo lo que ganas, a dos toques.
 
-<!-- Capturas: añade las imágenes en docs/capturas/ y descomenta esta sección.
-## Capturas
-<p align="center">
-  <img src="docs/capturas/inicio.png" width="49%" alt="Panel de inicio en ordenador">
-  <img src="docs/capturas/encargo.png" width="24%" alt="Detalle de un encargo en el móvil">
-  <img src="docs/capturas/calendario.png" width="24%" alt="Calendario en el móvil">
-</p>
--->
+Hecha a medida para una persona real: letra grande, botones grandes y nada que distraiga.
 
 ## Qué puedes hacer
 
-- **Hospitales** con sus servicios (cardiología, dermatología…) y las personas de contacto de cada uno.
-- **Empresas** proveedoras y su catálogo de productos con precio orientativo.
-- **Encargos por fases**, de oportunidad a ganado, con ofertas, productos y notas de seguimiento.
-- **Comisión automática**: pones ingresos y porcentaje y calcula lo que ganas.
-- **Panel de inicio** con beneficio potencial y ganado, y gráficos por mes.
-- **Calendario y avisos** con notificaciones en el móvil.
-- **Informes en PDF** listos para enviar.
-- **Adjuntos**: fotos y documentos en cada ficha.
-- **Tus datos son tuyos**: inicio de sesión y reglas de seguridad para que cada usuario vea solo lo suyo.
+| | |
+|---|---|
+| 🏥 **Hospitales** | Con sus servicios (cardiología, dermatología…) y las personas de contacto. |
+| 💼 **Encargos por fases** | De oportunidad a ganado, con ofertas, productos y notas. |
+| 📞 **Contactos** | Llamar o escribir desde la ficha. |
+| 📄 **Informes en PDF** | Listos para enviar. |
+| 📅 **Calendario y avisos** | Visitas y recordatorios en el móvil. |
+| ✅ **Comisión automática** | Pones ingresos y porcentaje, y calcula lo que ganas. |
 
 ## Úsala
 
 - **En el navegador:** [zonacliente.vercel.app](https://zonacliente.vercel.app)
-- **En Android:** descarga `zona-cliente-latest.apk` de la [última versión](https://github.com/roblesgg/zona-cliente/releases/latest).
+- **En Android:** baja `zona-cliente-latest.apk` de la [última versión](https://github.com/roblesgg/zona-cliente/releases/latest).
+
+Cada persona entra con su cuenta y solo ve sus propios datos.
 
 ## Hecho con
 
-React y Vite para la interfaz, Supabase para la base de datos, el inicio de sesión y los archivos, Capacitor para el APK y jsPDF para los informes. El APK se compila solo con GitHub Actions.
+React y Vite, Supabase para datos, inicio de sesión y archivos, y Capacitor para la app de Android.
 
-## Desarrollo
+<details>
+<summary><b>Para desarrollar</b></summary>
+
+<br>
 
 ```bash
 npm install
-cp .env.example .env    # rellena VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY
+cp .env.example .env    # VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY
 npm run dev             # http://localhost:5173
 ```
 
-Para preparar la base de datos, ejecuta en el SQL Editor de Supabase, por orden, `supabase/schema.sql`, `supabase/policies.sql`, `supabase/migracion-oportunidades.sql` y `supabase/informes.sql`.
+Base de datos: ejecuta en el SQL Editor de Supabase, por orden, `supabase/schema.sql`, `policies.sql`, `migracion-oportunidades.sql` e `informes.sql`.
 
 Cómo se levantaron los requisitos con el usuario real: [`docs/analisis-requisitos.md`](docs/analisis-requisitos.md).
 
-## Estado
-
-En uso real. Versión actual en la insignia de arriba.
+</details>
 
 ---
 
-<p align="center">
-  <img src="docs/dripdev.png" width="40" alt=""><br>
-  Un producto de <b>DripDev</b> · hecho por Álvaro Robles
-</p>
+<p align="center"><sub>Un producto de <a href="https://dripdev.dev"><b>DripDev</b></a> · hecho por Álvaro Robles</sub></p>
